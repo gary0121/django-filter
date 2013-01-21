@@ -16,8 +16,8 @@ except ImportError:  # Django < 1.5 fallback
     from django.db.models.sql.constants import LOOKUP_SEP
 
 from django_filters.filters import Filter, CharFilter, BooleanFilter, \
-    ChoiceFilter, DateFilter, DateTimeFilter, TimeFilter, ModelChoiceFilter, \
-    ModelMultipleChoiceFilter, NumberFilter
+    ChoiceFilter, MultipleChoiceFilter, DateFilter, DateTimeFilter, \
+    TimeFilter, ModelChoiceFilter, ModelMultipleChoiceFilter, NumberFilter
 
 
 ORDER_BY_FIELD = 'o'
@@ -225,8 +225,15 @@ class BaseFilterSet(object):
 
         self.filters = deepcopy(self.base_filters)
         # propagate the model being used through the filters
-        for filter_ in self.filters.values():
+        for name_, filter_ in self.filters.items():
             filter_.model = self._meta.model
+            # add choices to declared filters that don't have them defined
+            if name_ in self.declared_filters:
+                if isinstance(filter_, (ChoiceFilter, MultipleChoiceFilter,
+                        ModelChoiceFilter, ModelMultipleChoiceFilter)):
+                    if 'choices' not in filter_.extra:
+                        field = get_model_field(self._meta.model, filter_.name)
+                        filter_.extra['choices'] = field.choices
 
     def __iter__(self):
         for obj in self.qs:

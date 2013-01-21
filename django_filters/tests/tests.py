@@ -477,6 +477,29 @@ class FilterSetTest(TestCase):
 <li><a class="selected" href="?status=1">Admin</a></li>
 </ul></td></tr>""")
 
+    def test_choice_filter_with_inherited_choices(self):
+        class F(FilterSet):
+            status = ChoiceFilter()
+
+            class Meta:
+                model = User
+                fields = ['status']
+
+        f = F()
+        self.assertEqual(f.form.fields['status'].choices,
+            [(0, 'Regular'), (1, 'Admin')])
+        
+        class F(FilterSet):
+            status = ChoiceFilter(name='author__status')
+
+            class Meta:
+                model = Comment
+                fields = ['status']
+
+        f = F()
+        self.assertEqual(f.form.fields['status'].choices,
+            [(0, 'Regular'), (1, 'Admin')])
+
     def test_http_mapping(self):
         class F(FilterSet):
             class Meta:
