@@ -15,7 +15,8 @@ from django_filters.filters import (AllValuesFilter, CharFilter, ChoiceFilter,
 from django_filters.widgets import LinkWidget
 
 from django_filters.tests.models import (User, Comment, Book, Restaurant,
-    Article, NetworkSetting, SubnetMaskField, STATUS_CHOICES)
+    Article, NetworkSetting, SubnetMaskField, Color, ColorScheme,
+    STATUS_CHOICES)
 
 
 class GenericViewTests(TestCase):
@@ -315,6 +316,23 @@ class FilterSetTest(TestCase):
 
         f = F({'author': '2'}, queryset=Comment.objects.all())
         self.assertQuerysetEqual(f.qs, [2], lambda o: o.pk)
+
+    def test_fk_filter_with_to_field(self):
+        class F(FilterSet):
+            class Meta:
+                model = Color
+                fields = ['scheme']
+
+        f = F(queryset=Color.objects.all())
+        _html = ('''
+            <select id="id_scheme" name="scheme">
+            <option selected="selected" value="">---------</option>
+            <option value="ugly">ugly</option>
+            <option value="nice">nice</option>
+            </select>''')
+        self.assertHTMLEqual(str(f.form['scheme']), _html)
+        f = F({'scheme': 'ugly'}, queryset=Color.objects.all())
+        self.assertQuerysetEqual(f.qs, [1, 2], lambda o: o.pk)
 
     def test_m2m_filter(self):
         class F(FilterSet):

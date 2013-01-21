@@ -121,6 +121,52 @@
     },
     "model": "tests.book",
     "pk": 3
+  },
+  {
+    "fields": {
+      "name": "ugly"
+    },
+    "model": "tests.colorscheme",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "name": "nice"
+    },
+    "model": "tests.colorscheme",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "scheme": "ugly",
+      "value": "663333"
+    },
+    "model": "tests.color",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "scheme": "ugly",
+      "value": "666633"
+    },
+    "model": "tests.color",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "scheme": "nice",
+      "value": "336699"
+    },
+    "model": "tests.color",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "scheme": "nice",
+      "value": "009999"
+    },
+    "model": "tests.color",
+    "pk": 4
   }
 ]
 

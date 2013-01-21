@@ -92,3 +92,15 @@ class NetworkSetting(models.Model):
     mask = SubnetMaskField()
 
 
+class ColorScheme(models.Model):
+    name = models.CharField(unique=True, max_length=20)
+    
+    def __unicode__(self):
+        return self.name
+
+
+class Color(models.Model):
+    scheme = models.ForeignKey(ColorScheme, to_field='name')
+    value = models.CharField(max_length=6)
+
+
